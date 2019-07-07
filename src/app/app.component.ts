@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Item } from 'src/models/item';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'PillarCheckoutSystem';
+  availableItems: Item[] = [];
+
+  addToAvailableItems(itemToAdd: Item) {
+    const hasItem = this.availableItems.findIndex(asi => asi.name === itemToAdd.name);
+    if (hasItem === -1) {
+      this.availableItems.push(itemToAdd);
+    }
+  }
 }
