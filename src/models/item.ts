@@ -1,9 +1,13 @@
+import { Special } from './special';
+import { SpecialType } from './special-type';
+
 export class Item {
     name: string;
     price: number;
     weight: number;
     total: number;
     markdown: number;
+    special = new Special();
 
     constructor(values?: any) {
         this.name = values && values.name ? values.name : null;

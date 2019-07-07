@@ -71,6 +71,19 @@ describe('AppComponent', () => {
 
       expect(component.checkoutTotal).toBe(1);
     });
+
+    it('should be able to buy n and get x off for peanuts that have a special', () => {
+      const special = {
+        itemsToBuy: 2,
+        itemsToDiscount: 1,
+        discount: .5
+      };
+
+      component.availableItems[0].special.addBuyNGetXOffMSpecial(special);
+      scanPeanutItem(2);
+      component.calculateTotal();
+      expect(component.checkoutTotal).toBe(3);
+    });
   });
 
   function addPeanutsToAvailableItems() {

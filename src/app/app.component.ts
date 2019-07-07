@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Item } from 'src/models/item';
+import { SpecialType } from 'src/models/special-type';
+import { SpecialService } from './services/special.service';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +10,10 @@ import { Item } from 'src/models/item';
 })
 export class AppComponent {
   availableItems: Item[] = [];
-  scannedItems: Item[] = [];
   checkoutTotal = 0;
+  scannedItems: Item[] = [];
+
+  constructor(private specialService: SpecialService) { }
 
   addToAvailableItems(itemToAdd: Item) {
     const hasItem = this.availableItems.findIndex(asi => asi.name === itemToAdd.name);
@@ -37,11 +41,22 @@ export class AppComponent {
   calculateTotal() {
     this.checkoutTotal = 0;
 
-    this.scannedItems.forEach((si) => {
-      const availableItem = this.availableItems.find(ai => ai.name === si.name);
-      const numberScanned = si.weight / availableItem.weight;
-      this.checkoutTotal += (si.price - si.markdown) * numberScanned;
+    this.scannedItems.forEach((scannedItem) => {
+      const availableItem = this.availableItems.find(ai => ai.name === scannedItem.name);
+      const numberScanned = scannedItem.weight / availableItem.weight;
+
+      if (availableItem.special.type !== SpecialType.none) {
+        this.checkoutTotal += this.determineSpecialTotal(availableItem, scannedItem);
+      } else {
+        this.checkoutTotal += (scannedItem.price - scannedItem.markdown) * numberScanned;
+      }
     });
   }
 
+  determineSpecialTotal(availableItem: Item, scannedItem: Item) {
+    switch (availableItem.special.type) {
+      case SpecialType.getXOffNBuyM:
+        return this.specialService.calculateBuyNGetMAtXOffSpecialTotal(availableItem, scannedItem);
+    }
+  }
 }
