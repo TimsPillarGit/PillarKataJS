@@ -8,6 +8,8 @@ import { Item } from 'src/models/item';
 })
 export class AppComponent {
   availableItems: Item[] = [];
+  scannedItems: Item[] = [];
+  checkoutTotal = 0;
 
   addToAvailableItems(itemToAdd: Item) {
     const hasItem = this.availableItems.findIndex(asi => asi.name === itemToAdd.name);
@@ -15,4 +17,31 @@ export class AppComponent {
       this.availableItems.push(itemToAdd);
     }
   }
+
+  scanItem(scannedItem: Item) {
+    const availableItem = this.availableItems.find(ai => ai.name === scannedItem.name);
+
+    if (availableItem) {
+      const itemAlreadyScanned = this.scannedItems.find(si => si.name === availableItem.name);
+
+      if (itemAlreadyScanned) {
+        itemAlreadyScanned.weight += availableItem.weight;
+        itemAlreadyScanned.total += availableItem.price;
+      } else {
+        scannedItem.total = availableItem.price;
+        this.scannedItems.push(scannedItem);
+      }
+    }
+  }
+
+  calculateTotal() {
+    this.checkoutTotal = 0;
+
+    this.scannedItems.forEach((si) => {
+      const availableItem = this.availableItems.find(ai => ai.name === si.name);
+      const numberScanned = si.weight / availableItem.weight;
+      this.checkoutTotal += si.price * numberScanned;
+    });
+  }
+
 }

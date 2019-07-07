@@ -29,11 +29,32 @@ describe('AppComponent', () => {
     expect(component.availableItems.length).toBe(1);
   });
 
-  it('should now allow to add two items to available items with same name', () => {
+  it('should allow to add two items to available items with same name', () => {
     addPeanutsToAvailableItems();
     expect(component.availableItems.length).toBe(1);
     addPeanutsToAvailableItems();
     expect(component.availableItems.length).toBe(1);
+  });
+
+  it('should not allow to scan an item if it is not an available item', () => {
+    scanPeanutItem(1);
+    expect(component.scannedItems.length).toBe(0);
+  });
+
+  describe('when peanuts are an available item', () => {
+    beforeEach(() => {
+      addPeanutsToAvailableItems();
+    });
+
+    it('should allow to scan an item', () => {
+      scanPeanutItem(1);
+      expect(component.scannedItems.length).toBe(1);
+    });
+
+    it('should update total correctly if scan same item twice', () => {
+      scanPeanutItem(2);
+      expect(component.scannedItems.length).toBe(1);
+    });
   });
 
   function addPeanutsToAvailableItems() {
@@ -44,5 +65,19 @@ describe('AppComponent', () => {
     };
 
     component.addToAvailableItems(new Item(itemToAdd));
+  }
+
+  function scanPeanutItem(numberOfTimesToScan: number) {
+    let i = 0;
+    while (i < numberOfTimesToScan) {
+      const itemToScan = {
+        name: 'peanuts',
+        price: 2,
+        weight: 1
+      };
+
+      component.scanItem(new Item(itemToScan));
+      i++;
+    }
   }
 });
