@@ -40,7 +40,7 @@ export class AppComponent {
     this.scannedItems.forEach((si) => {
       const availableItem = this.availableItems.find(ai => ai.name === si.name);
       const numberScanned = si.weight / availableItem.weight;
-      this.checkoutTotal += si.price * numberScanned;
+      this.checkoutTotal += (si.price - si.markdown) * numberScanned;
     });
   }
 

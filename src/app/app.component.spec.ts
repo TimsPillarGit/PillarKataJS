@@ -46,14 +46,30 @@ describe('AppComponent', () => {
       addPeanutsToAvailableItems();
     });
 
-    it('should allow to scan an item', () => {
+    it('should allow to scan peanuts', () => {
       scanPeanutItem(1);
       expect(component.scannedItems.length).toBe(1);
     });
 
-    it('should update total correctly if scan same item twice', () => {
+    it('should update total correctly if scan peanuts twice', () => {
       scanPeanutItem(2);
-      expect(component.scannedItems.length).toBe(1);
+      component.calculateTotal();
+      expect(component.checkoutTotal).toBe(4);
+    });
+
+    it('should discount price of peanuts if it has a markdown', () => {
+      const markedDownItem = {
+        name: 'peanuts',
+        price: 2,
+        weight: 1,
+        total: 0,
+        markdown: 1
+      };
+
+      component.scanItem(new Item(markedDownItem));
+      component.calculateTotal();
+
+      expect(component.checkoutTotal).toBe(1);
     });
   });
 
