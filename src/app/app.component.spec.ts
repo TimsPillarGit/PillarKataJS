@@ -84,6 +84,18 @@ describe('AppComponent', () => {
       component.calculateTotal();
       expect(component.checkoutTotal).toBe(3);
     });
+
+    it('should be able to create a special to buy n peanuts for a discounted price', () => {
+      const special = {
+        itemsToBuy: 2,
+        fixedDiscountedPrice: 1
+      };
+
+      component.availableItems[0].special.addBuyNGetAllForMPrice(special);
+      scanPeanutItem(2);
+      component.calculateTotal();
+      expect(component.checkoutTotal).toBe(1);
+    });
   });
 
   function addPeanutsToAvailableItems() {

@@ -56,7 +56,9 @@ export class AppComponent {
   determineSpecialTotal(availableItem: Item, scannedItem: Item) {
     switch (availableItem.special.type) {
       case SpecialType.getXOffNBuyM:
-        return this.specialService.calculateBuyNGetMAtXOffSpecialTotal(availableItem, scannedItem);
+        return this.specialService.calculateBuyNGetMAtXOffTotal(availableItem, scannedItem);
+      case SpecialType.getXForM:
+        return this.specialService.calculateGetXForMTotal(availableItem, scannedItem);
     }
   }
 }

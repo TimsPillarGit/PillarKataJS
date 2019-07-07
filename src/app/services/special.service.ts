@@ -8,7 +8,7 @@ export class SpecialService {
 
   constructor() { }
 
-  calculateBuyNGetMAtXOffSpecialTotal(availableItem: Item, scannedItem: Item) {
+  calculateBuyNGetMAtXOffTotal(availableItem: Item, scannedItem: Item) {
     const numberScanned = scannedItem.weight / availableItem.weight;
 
     if (numberScanned >= availableItem.special.itemsToBuy) {
@@ -21,6 +21,23 @@ export class SpecialService {
 
       return discountedTotal + fullPriceTotal;
     } else {
+      return numberScanned * availableItem.price;
+    }
+  }
+
+  calculateGetXForMTotal(availableItem: Item, scannedItem: Item) {
+    const numberScanned = scannedItem.weight / availableItem.weight;
+
+    if (numberScanned >= availableItem.special.itemsToBuy) {
+      const timesToDiscount = numberScanned / availableItem.special.itemsToBuy;
+      const remainingItems = numberScanned - (timesToDiscount * availableItem.special.itemsToBuy);
+
+      const discountedTotal = timesToDiscount * availableItem.special.fixedDiscountedPrice;
+      const fullPriceTotal = remainingItems * availableItem.price;
+
+      return discountedTotal + fullPriceTotal;
+    }
+    else {
       return numberScanned * availableItem.price;
     }
   }
