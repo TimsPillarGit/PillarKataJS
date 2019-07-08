@@ -59,6 +59,8 @@ export class AppComponent {
         return this.specialService.calculateBuyNGetMAtXOffTotal(availableItem, scannedItem);
       case SpecialType.getXForM:
         return this.specialService.calculateGetXForMTotal(availableItem, scannedItem);
+      case SpecialType.getNWeightMWeightDiscount:
+        return this.specialService.calculateBuyNWeightGetMWeightDiscountSpecialTotal(availableItem, scannedItem);
     }
   }
 

@@ -157,6 +157,46 @@ describe('AppComponent', () => {
       component.calculateTotal();
       expect(component.checkoutTotal).toBe(4);
     });
+
+    it('should be able to add a special purchase n weight and receive discount on m weight', () => {
+      const itemToRemove = {
+        name: 'peanuts',
+        price: 2,
+        weight: 1
+      };
+
+      scanPeanutItem(2);
+      expect(component.scannedItems[0].weight).toBe(2);
+      component.removeScannedItem(new Item(itemToRemove));
+      expect(component.scannedItems[0].weight).toBe(1);
+    });
+
+    it('should be able to add a special get n weight and receivea a discount on m weight', () => {
+      const special = {
+        weightToBuy: 3,
+        weightDiscounted: 2,
+        discount: .5
+      };
+
+      component.availableItems[0].special.addBuyNWeightGetMWeightForMDiscount(special);
+      scanPeanutItem(5);
+      component.calculateTotal();
+      expect(component.checkoutTotal).toBe(8);
+    });
+
+    it('should be able to add a special get n weight and receivea a discount on m weight with a limit', () => {
+      const special = {
+        weightToBuy: 3,
+        weightDiscounted: 2,
+        discount: .5,
+        limit: 10
+      };
+
+      component.availableItems[0].special.addBuyNWeightGetMWeightForMDiscount(special);
+      scanPeanutItem(15);
+      component.calculateTotal();
+      expect(component.checkoutTotal).toBe(26);
+    });
   });
 
   function addPeanutsToAvailableItems() {

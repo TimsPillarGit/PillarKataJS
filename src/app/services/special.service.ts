@@ -45,4 +45,27 @@ export class SpecialService {
       return numberScanned * availableItem.price;
     }
   }
+
+  calculateBuyNWeightGetMWeightDiscountSpecialTotal(availableItem: Item, scannedItem: Item) {
+    const totalWeight = scannedItem.weight;
+    if (totalWeight >= availableItem.special.weightToBuy) {
+      let discountedTotal = 0;
+      let fullPriceTotal = 0;
+
+      const weightNeededForDiscount = availableItem.special.weightToBuy + availableItem.special.weightToDiscount;
+      const itemHasLimit = availableItem.special.limit > 0;
+      let timesToApplyDiscount = Math.floor(totalWeight / weightNeededForDiscount);
+      const maxTimesAllowedToApplyDiscount = Math.floor(availableItem.special.limit / weightNeededForDiscount);
+
+      timesToApplyDiscount = itemHasLimit && timesToApplyDiscount > maxTimesAllowedToApplyDiscount ?
+        maxTimesAllowedToApplyDiscount : timesToApplyDiscount;
+      const weightToDiscount = availableItem.special.weightToDiscount * timesToApplyDiscount;
+
+      discountedTotal = weightToDiscount * (availableItem.price * availableItem.special.discount);
+      fullPriceTotal = (scannedItem.weight - weightToDiscount) * availableItem.price;
+      return discountedTotal + fullPriceTotal;
+    } else {
+      return (totalWeight / availableItem.weight) * availableItem.price;
+    }
+  }
 }
