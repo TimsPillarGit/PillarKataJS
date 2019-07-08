@@ -10,12 +10,16 @@ export class SpecialService {
 
   calculateBuyNGetMAtXOffTotal(availableItem: Item, scannedItem: Item) {
     const numberScanned = scannedItem.weight / availableItem.weight;
-
     if (numberScanned >= availableItem.special.itemsToBuy) {
       let discountedTotal = 0;
       let fullPriceTotal = 0;
-      const itemsToDiscount = numberScanned / availableItem.special.itemsToBuy;
+      let itemsToDiscount = numberScanned / availableItem.special.itemsToBuy;
+      const itemHasLimit = availableItem.special.limit > 0;
+      const timesAllowedToDiscount = itemHasLimit ?
+        (availableItem.special.limit / (availableItem.special.itemsToBuy + availableItem.special.itemsToDiscount)) : 0;
 
+      itemsToDiscount = timesAllowedToDiscount !== 0 && itemsToDiscount > timesAllowedToDiscount ?
+        timesAllowedToDiscount : itemsToDiscount;
       discountedTotal += itemsToDiscount * (availableItem.price * availableItem.special.discount);
       fullPriceTotal += (numberScanned - itemsToDiscount) * availableItem.price;
 
@@ -27,17 +31,17 @@ export class SpecialService {
 
   calculateGetXForMTotal(availableItem: Item, scannedItem: Item) {
     const numberScanned = scannedItem.weight / availableItem.weight;
-
     if (numberScanned >= availableItem.special.itemsToBuy) {
-      const timesToDiscount = numberScanned / availableItem.special.itemsToBuy;
+      let timesToDiscount = numberScanned / availableItem.special.itemsToBuy;
+      const itemHasLimit = availableItem.special.limit > 0;
+      timesToDiscount = itemHasLimit ? availableItem.special.limit / availableItem.special.itemsToBuy : timesToDiscount;
       const remainingItems = numberScanned - (timesToDiscount * availableItem.special.itemsToBuy);
 
-      const discountedTotal = timesToDiscount * availableItem.special.fixedDiscountedPrice;
-      const fullPriceTotal = remainingItems * availableItem.price;
+      const discountedCost = timesToDiscount * availableItem.special.fixedDiscountedPrice;
+      const fullPriceItems = remainingItems * availableItem.price;
 
-      return discountedTotal + fullPriceTotal;
-    }
-    else {
+      return discountedCost + fullPriceItems;
+    } else {
       return numberScanned * availableItem.price;
     }
   }

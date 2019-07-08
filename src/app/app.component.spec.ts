@@ -96,6 +96,33 @@ describe('AppComponent', () => {
       component.calculateTotal();
       expect(component.checkoutTotal).toBe(1);
     });
+
+    it('should be able to place limit on special to buy n and get x off for peanuts', () => {
+      const special = {
+        itemsToBuy: 2,
+        itemsToDiscount: 1,
+        discount: .5,
+        limit: 6
+      };
+
+      component.availableItems[0].special.addBuyNGetXOffMSpecial(special);
+      scanPeanutItem(9);
+      component.calculateTotal();
+      expect(component.checkoutTotal).toBe(16);
+    });
+
+    it('should be able place limit on a special to buy n peanuts for a discounted price', () => {
+      const special = {
+        itemsToBuy: 2,
+        fixedDiscountedPrice: 1,
+        limit: 6
+      };
+
+      component.availableItems[0].special.addBuyNGetAllForMPrice(special);
+      scanPeanutItem(7);
+      component.calculateTotal();
+      expect(component.checkoutTotal).toBe(5);
+    });
   });
 
   function addPeanutsToAvailableItems() {
