@@ -13,7 +13,7 @@ export class SpecialService {
     if (numberScanned >= availableItem.special.itemsToBuy) {
       let discountedTotal = 0;
       let fullPriceTotal = 0;
-      let itemsToDiscount = numberScanned / availableItem.special.itemsToBuy;
+      let itemsToDiscount = Math.floor(numberScanned / availableItem.special.itemsToBuy);
       const itemHasLimit = availableItem.special.limit > 0;
       const timesAllowedToDiscount = itemHasLimit ?
         (availableItem.special.limit / (availableItem.special.itemsToBuy + availableItem.special.itemsToDiscount)) : 0;
@@ -32,7 +32,7 @@ export class SpecialService {
   calculateGetXForMTotal(availableItem: Item, scannedItem: Item) {
     const numberScanned = scannedItem.weight / availableItem.weight;
     if (numberScanned >= availableItem.special.itemsToBuy) {
-      let timesToDiscount = numberScanned / availableItem.special.itemsToBuy;
+      let timesToDiscount = Math.floor(numberScanned / availableItem.special.itemsToBuy);
       const itemHasLimit = availableItem.special.limit > 0;
       timesToDiscount = itemHasLimit ? availableItem.special.limit / availableItem.special.itemsToBuy : timesToDiscount;
       const remainingItems = numberScanned - (timesToDiscount * availableItem.special.itemsToBuy);

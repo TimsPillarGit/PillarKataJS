@@ -123,6 +123,40 @@ describe('AppComponent', () => {
       component.calculateTotal();
       expect(component.checkoutTotal).toBe(5);
     });
+
+    it('should be able to remove a scanned item', () => {
+      const itemToRemove = {
+        name: 'peanuts',
+        price: 2,
+        weight: 1
+      };
+
+      scanPeanutItem(2);
+      expect(component.scannedItems[0].weight).toBe(2);
+      component.removeScannedItem(new Item(itemToRemove));
+      expect(component.scannedItems[0].weight).toBe(1);
+    });
+
+    it('should be able to remove a scanned item and invalidate special', () => {
+      const special = {
+        itemsToBuy: 2,
+        fixedDiscountedPrice: 1
+      };
+
+      const itemToRemove = {
+        name: 'peanuts',
+        price: 2,
+        weight: 1
+      };
+
+      component.availableItems[0].special.addBuyNGetAllForMPrice(special);
+      scanPeanutItem(6);
+      component.calculateTotal();
+      expect(component.checkoutTotal).toBe(3);
+      component.removeScannedItem(new Item(itemToRemove));
+      component.calculateTotal();
+      expect(component.checkoutTotal).toBe(4);
+    });
   });
 
   function addPeanutsToAvailableItems() {

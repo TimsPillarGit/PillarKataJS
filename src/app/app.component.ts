@@ -61,4 +61,15 @@ export class AppComponent {
         return this.specialService.calculateGetXForMTotal(availableItem, scannedItem);
     }
   }
+
+  removeScannedItem(itemToRemove: Item) {
+    const itemToAdjust = this.scannedItems.find(si => si.name === itemToRemove.name);
+    if (itemToAdjust) {
+      if (itemToAdjust.weight === itemToRemove.weight) {
+        this.scannedItems = this.scannedItems.filter(si => si.name === itemToRemove.name);
+      } else {
+        itemToAdjust.weight -= itemToRemove.weight;
+      }
+    }
+  }
 }
